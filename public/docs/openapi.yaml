@@ -1,0 +1,296 @@
+openapi: 3.0.3
+info:
+  title: Laravel
+  description: ''
+  version: 1.0.0
+servers:
+  -
+    url: 'http://localhost:8000'
+paths:
+  /api/login:
+    post:
+      summary: Login
+      operationId: login
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "[\n     {\n\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNzM0MDQ3MTQyLCJleHAiOjE3MzQwNTA3NDIsIm5iZiI6MTczNDA0NzE0MiwianRpIjoiVTRqNThud2IzWEwybWxDbyIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.8LA7a5SMAZRgFdvd_Hn5Fu6jkVWBN2XUZstHGsrMtdg\",\n\"user\": {\n\"id\": 3,\n\"name\": \"Susan-Maggie Arnaud\",\n\"email\": \"bertrand.etienne@example.com\",\n\"email_verified_at\": \"2024-12-12T19:38:41.000000Z\",\n\"role\": \"user\",\n\"created_at\": \"2024-12-12T19:38:41.000000Z\",\n\"updated_at\": \"2024-12-12T19:38:41.000000Z\"\n}\n},\n ]"
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: validation.email.
+                  example: jamar.homenick@example.com
+                  nullable: false
+                password:
+                  type: string
+                  description: ''
+                  example: '-5''pJy!#g>|r/:"'
+                  nullable: false
+              required:
+                - email
+                - password
+      security: []
+  /api/logout:
+    post:
+      summary: Logout
+      operationId: logout
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "[\n      {\n\"message\": \"Successfully logged out\"\n},\n  ]"
+      tags:
+        - Auth
+      security: []
+  /api/user:
+    get:
+      summary: ''
+      operationId: getApiUser
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Token not provided'
+                properties:
+                  message:
+                    type: string
+                    example: 'Token not provided'
+      tags:
+        - Endpoints
+      security: []
+  /api/restaurants:
+    get:
+      summary: 'Display a listing of the restaurants.'
+      operationId: displayAListingOfTheRestaurants
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Token not provided'
+                properties:
+                  message:
+                    type: string
+                    example: 'Token not provided'
+      tags:
+        - Endpoints
+      security: []
+    post:
+      summary: 'Store a newly created restaurant.'
+      operationId: storeANewlyCreatedRestaurant
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: validation.max.
+                  example: ocuimaqw
+                  nullable: false
+                description:
+                  type: string
+                  description: ''
+                  example: 'Reprehenderit beatae inventore ex maiores maxime et atque.'
+                  nullable: true
+                photo:
+                  type: string
+                  description: ''
+                  example: molestiae
+                  nullable: true
+              required:
+                - name
+      security: []
+  '/api/restaurants/{id}':
+    get:
+      summary: 'Display the specified restaurant.'
+      operationId: displayTheSpecifiedRestaurant
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Token not provided'
+                properties:
+                  message:
+                    type: string
+                    example: 'Token not provided'
+      tags:
+        - Endpoints
+      security: []
+    put:
+      summary: 'Update the specified restaurant.'
+      operationId: updateTheSpecifiedRestaurant
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: validation.max.
+                  example: fciwapyyyrogkidrpn
+                  nullable: false
+                description:
+                  type: string
+                  description: ''
+                  example: 'Saepe explicabo sint explicabo dolorem sunt fugit.'
+                  nullable: true
+                photo:
+                  type: string
+                  description: ''
+                  example: officiis
+                  nullable: true
+              required:
+                - name
+      security: []
+    delete:
+      summary: 'Remove the specified restaurant.'
+      operationId: removeTheSpecifiedRestaurant
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the restaurant.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/test:
+    get:
+      summary: ''
+      operationId: getApiTest
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Token not provided'
+                properties:
+                  message:
+                    type: string
+                    example: 'Token not provided'
+      tags:
+        - Endpoints
+      security: []
+  /api/users:
+    get:
+      summary: 'Get All Users (Admin)'
+      operationId: getAllUsersAdmin
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Token not provided'
+                properties:
+                  message:
+                    type: string
+                    example: 'Token not provided'
+      tags:
+        - User
+  '/api/users/{id}':
+    get:
+      summary: 'Get User by ID (Admin)'
+      operationId: getUserByIDAdmin
+      description: ''
+      parameters: []
+      responses:
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Token not provided'
+                properties:
+                  message:
+                    type: string
+                    example: 'Token not provided'
+      tags:
+        - User
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the user.'
+        example: assumenda
+        required: true
+        schema:
+          type: string
+tags:
+  -
+    name: Auth
+    description: ''
+  -
+    name: Endpoints
+    description: ''
+  -
+    name: User
+    description: "{\n\"id\": 3,\n\"name\": \"Susan-Maggie Arnaud\",\n\"email\": \"bertrand.etienne@example.com\",\n\"email_verified_at\": \"2024-12-12T19:38:41.000000Z\",\n\"role\": \"user\",\n\"created_at\": \"2024-12-12T19:38:41.000000Z\",\n\"updated_at\": \"2024-12-12T19:38:41.000000Z\"\n}"

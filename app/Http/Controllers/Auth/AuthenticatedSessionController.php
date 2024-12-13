@@ -11,7 +11,8 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Handle an incoming authentication request.
+     * Login
+     * @group Auth
      */
     public function store(LoginRequest $request)
     {
@@ -35,7 +36,8 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Destroy an authenticated session.
+     * Logout
+     * @group Auth
      */
     public function destroy(Request $request)
     {

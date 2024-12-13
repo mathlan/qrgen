@@ -7,9 +7,6 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    /**
-     * Récupérer tous les utilisateurs.
-     */
     public function index()
     {
         // Récupérer tous les utilisateurs
@@ -17,9 +14,6 @@ class UserController extends Controller
         return response()->json($users);
     }
 
-    /**
-     * Récupérer un utilisateur par son ID.
-     */
     public function show($id)
     {
         // Vérifier si l'utilisateur existe
