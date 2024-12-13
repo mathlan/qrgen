@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Http\Request;
 
 class VerifyEmailController extends Controller
@@ -19,38 +18,24 @@ class VerifyEmailController extends Controller
     public function store($id, $hash, Request $request): JsonResponse
     {
         try {
-            // Enhanced logging for debugging
-            Log::info('Email Verification Attempt', [
-                'id' => $id,
-                'hash' => $hash,
-                'full_url' => $request->fullUrl(),
-                'all_query_params' => $request->query(),
-                'has_valid_signature' => URL::hasValidSignature($request),
-                'signature' => $request->query('signature'),
-                'expires' => $request->query('expires')
-            ]);
-
+            // Trouver l'utilisateur
             $user = User::findOrFail($id);
 
-            // Verify hash matches email hash
+            // Vérifier le hash
             if (sha1($user->email) !== $hash) {
-                Log::warning('Hash mismatch', [
-                    'stored_email_hash' => sha1($user->email),
+                Log::warning('Hash de vérification invalide', [
+                    'user_id' => $id,
+                    'stored_hash' => sha1($user->email),
                     'provided_hash' => $hash
                 ]);
+
                 return response()->json([
-                    'message' => 'Lien de vérification invalide'
+                    'message' => 'Lien de vérification invalide',
+                    'status' => 'invalid_verification_link'
                 ], 400);
             }
 
-            // Signature validation
-            if (!URL::hasValidSignature($request)) {
-                return response()->json([
-                    'message' => 'Lien de vérification invalide ou expiré'
-                ], 400);
-            }
-
-            // Check if email already verified
+            // Vérifier si l'email est déjà vérifié
             if ($user->hasVerifiedEmail()) {
                 return response()->json([
                     'message' => 'Email déjà vérifié',
@@ -58,10 +43,10 @@ class VerifyEmailController extends Controller
                 ], 200);
             }
 
-            // Mark email as verified
+            // Marquer l'email comme vérifié
             $user->markEmailAsVerified();
 
-            Log::info('Email vérifié', [
+            Log::info('Email vérifié avec succès', [
                 'user_id' => $user->id,
                 'email' => $user->email
             ]);
@@ -72,10 +57,9 @@ class VerifyEmailController extends Controller
             ], 200);
 
         } catch (\Exception $e) {
-            Log::error('Erreur de vérification email', [
+            Log::error('Erreur de vérification d\'email', [
                 'message' => $e->getMessage(),
-                'id' => $id,
-                'trace' => $e->getTraceAsString()
+                'user_id' => $id
             ]);
 
             return response()->json([

@@ -17,14 +17,13 @@ Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 Route::post('/register', [RegisteredUserController::class, 'store']);
 Route::post('/forgot-password', [PasswordResetController::class, 'store']);
 Route::post('/reset-password', [NewPasswordController::class, 'store']);
-Route::get('/verify-email/{id}/{hash}', [VerifyEmailController::class, 'store'])
-    ->middleware('signed');
+Route::get('/verify-email/{id}/{hash}', [VerifyEmailController::class, 'store']);
 
 
 //* PRIVATE (JWT auth)
 Route::middleware('jwt.auth')->group(function () {
 
-    Route::post('/verification-notification', [EmailVerificationNotificationController::class, 'sendVerificationLink'])
+    Route::post('/verification-notification', [EmailVerificationNotificationController::class, 'store'])
         ->name('verification.send');
     // AUTH
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
