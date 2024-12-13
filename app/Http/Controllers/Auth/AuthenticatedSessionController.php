@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -15,19 +15,19 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
-        // Authentification des données
-        $request->authenticate();
+        // Récupération des informations d'authentification
+        $credentials = $request->only('email', 'password');
 
-        // Régénération de la session pour des raisons de sécurité
-        $request->session()->regenerate();
+        // Tentative de génération du token JWT avec les identifiants fournis
+        if (!$token = JWTAuth::attempt($credentials)) {
+            // Si l'authentification échoue, renvoyer une réponse d'erreur
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
 
         // Récupération de l'utilisateur authentifié
-        $user = Auth::user();
+        $user = auth()->user();
 
-        // Génération d'un token personnel pour cet utilisateur
-        $token = $user->createToken('API Token')->plainTextToken;
-
-        // Retourne une réponse avec le token
+        // Retourne une réponse avec le token JWT et l'utilisateur
         return response()->json([
             'token' => $token,
             'user' => $user, // Optionnel, si vous souhaitez inclure des détails utilisateur
@@ -37,14 +37,12 @@ class AuthenticatedSessionController extends Controller
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): Response
+    public function destroy(Request $request)
     {
-        Auth::guard('web')->logout();
+        // Invalider le token JWT actuel
+        JWTAuth::invalidate(JWTAuth::getToken());
 
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
-
-        return response()->noContent();
+        // Retourner une réponse de succès (200 OK)
+        return response()->json(['message' => 'Successfully logged out'], Response::HTTP_OK);
     }
 }
