@@ -6,27 +6,19 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\IngredientController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\RestaurantController;
 
-//* PUBLIC (no auth)
-Route::post('/login', [AuthenticatedSessionController::class, 'store']);
-Route::post('/register', [RegisteredUserController::class, 'store']);
-Route::post('/forgot-password', [PasswordResetController::class, 'store']);
-Route::post('/reset-password', [NewPasswordController::class, 'store']);
-Route::get('/verify-email/{id}/{hash}', [VerifyEmailController::class, 'store']);
+// AUTH
+require base_path('routes/auth.php');
 
+//* PUBLIC (no auth)
 
 //* PRIVATE (JWT auth)
 Route::middleware('jwt.auth')->group(function () {
-
-    Route::post('/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-        ->name('verification.send');
-    // AUTH
-    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
 
     // USER
     Route::get('/user', function (Request $request) {
@@ -34,7 +26,20 @@ Route::middleware('jwt.auth')->group(function () {
     });
 
     // RESTO
-    Route::apiResource('restaurants', RestaurantController::class);
+    Route::get('/restaurants', [RestaurantController::class, 'index']);
+    // Créer un nouveau restaurant
+    Route::post('/restaurants', [RestaurantController::class, 'store']);
+    // Détails d'un restaurant spécifique
+    Route::get('/restaurants/{restaurant}', [RestaurantController::class, 'show']);
+    // Mettre à jour un restaurant
+    Route::put('/restaurants/{restaurant}', [RestaurantController::class, 'update']);
+    Route::patch('/restaurants/{restaurant}', [RestaurantController::class, 'update']);
+    // Supprimer un restaurant
+    Route::delete('/restaurants/{restaurant}', [RestaurantController::class, 'destroy']);
+
+    // INGREDIENTS
+    Route::get('/ingredients', [IngredientController::class, 'index']);
+    Route::get('/ingredients/{ingredient}', [IngredientController::class, 'show']);
 
     // TEST
     Route::get('/test', function () {

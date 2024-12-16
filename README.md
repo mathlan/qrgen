@@ -30,6 +30,12 @@ php artisan db:seed
 php artisan migrate:fresh --seed (+ clean DB)
 ```
 
+## Jwt
+Generate:
+```
+php artisan jwt:secret
+```
+
 ## Tests
 
 ## Issues
