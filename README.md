@@ -37,6 +37,14 @@ php artisan jwt:secret
 ```
 
 ## Tests
+Migration
+```
+php artisan migrate --env=testing
+```
+Run
+```
+./vendor/bin/pest
+```
 
 ## Issues
 Disable CSRF to use Breeze in API

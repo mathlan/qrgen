@@ -7,9 +7,10 @@ use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class RegisteredUserController extends Controller
 {
@@ -34,10 +35,16 @@ class RegisteredUserController extends Controller
                 'role' => 'user',
             ]);
 
-            event(new Registered($user));
-            Auth::login($user);
+            // Dispatch the Registered event
+            Event::dispatch(new Registered($user));
 
-            return response()->json(['message' => 'User successfully registered'], 201);
+            $token = JWTAuth::fromUser($user);
+
+            return response()->json([
+                'message' => 'User successfully registered',
+                'token' => $token,
+                'user' => $user
+            ], 201);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'message' => 'Validation error',
@@ -45,5 +52,4 @@ class RegisteredUserController extends Controller
             ], 422);
         }
     }
-
 }

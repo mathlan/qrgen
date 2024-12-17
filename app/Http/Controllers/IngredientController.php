@@ -4,13 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Ingredient;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class IngredientController extends Controller
 {
-    /**
-     * Liste tous les ingrédients (accessible à tous)
-     */
     public function index(Request $request)
     {
         $query = Ingredient::query();
@@ -28,21 +25,17 @@ class IngredientController extends Controller
         return $query->paginate($request->input('per_page', 10));
     }
 
-    /**
-     * Affiche un ingrédient spécifique (accessible à tous)
-     */
     public function show(Ingredient $ingredient)
     {
         return $ingredient;
     }
 
-    /**
-     * Crée un nouvel ingrédient (réservé aux admins)
-     */
     public function store(Request $request)
     {
+        $user = JWTAuth::parseToken()->authenticate();
+
         // Vérification du rôle admin
-        if (Auth::user()->role !== 'admin') {
+        if ($user->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -56,13 +49,12 @@ class IngredientController extends Controller
         return response()->json($ingredient, 201);
     }
 
-    /**
-     * Met à jour un ingrédient (réservé aux admins)
-     */
     public function update(Request $request, Ingredient $ingredient)
     {
+        $user = JWTAuth::parseToken()->authenticate();
+
         // Vérification du rôle admin
-        if (Auth::user()->role !== 'admin') {
+        if ($user->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -76,13 +68,12 @@ class IngredientController extends Controller
         return response()->json($ingredient);
     }
 
-    /**
-     * Supprime un ingrédient (réservé aux admins)
-     */
     public function destroy(Ingredient $ingredient)
     {
+        $user = JWTAuth::parseToken()->authenticate();
+
         // Vérification du rôle admin
-        if (Auth::user()->role !== 'admin') {
+        if ($user->role !== 'admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 

@@ -1,11 +1,6 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Auth\EmailVerificationNotificationController;
-use App\Http\Controllers\Auth\NewPasswordController;
-use App\Http\Controllers\Auth\PasswordResetController;
-use App\Http\Controllers\Auth\RegisteredUserController;
-use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\IngredientController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -17,6 +12,18 @@ require base_path('routes/auth.php');
 
 //* PUBLIC (no auth)
 
+    // RESTO
+    Route::get('/restaurants', [RestaurantController::class, 'index']);
+    Route::get('/restaurants/{restaurant}', [RestaurantController::class, 'show']);
+
+    // INGREDIENTS
+    Route::get('/ingredients', [IngredientController::class, 'index']);
+    Route::get('/ingredients/{ingredient}', [IngredientController::class, 'show']);
+
+    //CATEGORIES
+    Route::get('/categories', [CategoryController::class, 'index']);
+    Route::get('/categories/{category}', [CategoryController::class, 'show']);
+
 //* PRIVATE (JWT auth)
 Route::middleware('jwt.auth')->group(function () {
 
@@ -24,22 +31,17 @@ Route::middleware('jwt.auth')->group(function () {
     Route::get('/user', function (Request $request) {
         return response()->json($request->user());
     });
-
     // RESTO
-    Route::get('/restaurants', [RestaurantController::class, 'index']);
-    // Créer un nouveau restaurant
     Route::post('/restaurants', [RestaurantController::class, 'store']);
-    // Détails d'un restaurant spécifique
-    Route::get('/restaurants/{restaurant}', [RestaurantController::class, 'show']);
-    // Mettre à jour un restaurant
     Route::put('/restaurants/{restaurant}', [RestaurantController::class, 'update']);
     Route::patch('/restaurants/{restaurant}', [RestaurantController::class, 'update']);
-    // Supprimer un restaurant
     Route::delete('/restaurants/{restaurant}', [RestaurantController::class, 'destroy']);
 
     // INGREDIENTS
-    Route::get('/ingredients', [IngredientController::class, 'index']);
-    Route::get('/ingredients/{ingredient}', [IngredientController::class, 'show']);
+    Route::post('/categories', [CategoryController::class, 'store']);
+    Route::put('/categories/{category}', [CategoryController::class, 'update']);
+    Route::patch('/categories/{category}', [CategoryController::class, 'update']);
+    Route::delete('/categories/{category}', [CategoryController::class, 'destroy']);
 
     // TEST
     Route::get('/test', function () {
