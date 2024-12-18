@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\RecipeController;
+use App\Http\Controllers\ScheduleController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,10 @@ require base_path('routes/auth.php');
     Route::get('/recipes', [RecipeController::class, 'index']);
     Route::get('/recipes/{recipe}', [RecipeController::class, 'show']);
 
+    //SCHEDULES
+    Route::get('/schedules', [ScheduleController::class, 'index']);
+    Route::get('/schedules/{schedule}', [ScheduleController::class, 'show']);
+
 //* PRIVATE (JWT auth)
 Route::middleware('jwt.auth')->group(function () {
 
@@ -53,6 +58,12 @@ Route::middleware('jwt.auth')->group(function () {
     Route::put('/recipes/{recipe}', [RecipeController::class, 'update']);
     Route::patch('/recipes/{recipe}', [RecipeController::class, 'update']);
     Route::delete('/recipes/{recipe}', [RecipeController::class, 'destroy']);
+
+    // SCHEDULES
+    Route::post('/schedules', [ScheduleController::class, 'store']);
+    Route::put('/schedules/{schedule}', [ScheduleController::class, 'update']);
+    Route::patch('/schedules/{schedule}', [ScheduleController::class, 'update']);
+    Route::delete('/schedules/{schedule}', [ScheduleController::class, 'destroy']);
 
     // TEST
     Route::get('/test', function () {
