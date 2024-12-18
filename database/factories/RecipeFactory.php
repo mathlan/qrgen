@@ -27,7 +27,10 @@ class RecipeFactory extends Factory
             'name' => fake()->words(3, true),
             'description' => fake()->paragraph(),
             'price' => fake()->randomFloat(2, 5, 50),
-            'ingredients' => fake()->words(5),
+//            'ingredients' => fake()->words(5),
+            'ingredients' => json_encode(
+                \App\Models\Ingredient::inRandomOrder()->limit(rand(1, 5))->pluck('id')->toArray()
+            ),
             'photo' => fake()->imageUrl(640, 480, 'food'),
         ];
     }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\IngredientController;
+use App\Http\Controllers\RecipeController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,10 @@ require base_path('routes/auth.php');
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/categories/{category}', [CategoryController::class, 'show']);
 
+    //RECIPES
+    Route::get('/recipes', [RecipeController::class, 'index']);
+    Route::get('/recipes/{recipe}', [RecipeController::class, 'show']);
+
 //* PRIVATE (JWT auth)
 Route::middleware('jwt.auth')->group(function () {
 
@@ -42,6 +47,12 @@ Route::middleware('jwt.auth')->group(function () {
     Route::put('/categories/{category}', [CategoryController::class, 'update']);
     Route::patch('/categories/{category}', [CategoryController::class, 'update']);
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy']);
+
+    // RECIPES
+    Route::post('/recipes', [RecipeController::class, 'store']);
+    Route::put('/recipes/{recipe}', [RecipeController::class, 'update']);
+    Route::patch('/recipes/{recipe}', [RecipeController::class, 'update']);
+    Route::delete('/recipes/{recipe}', [RecipeController::class, 'destroy']);
 
     // TEST
     Route::get('/test', function () {

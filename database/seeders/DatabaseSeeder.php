@@ -79,9 +79,11 @@ class DatabaseSeeder extends Seeder
                         'category_id' => $category->id
                     ])->each(function ($recipe) use ($ingredients) {
                         // Attacher des ingrédients aux recettes
-                        $recipe->ingredients()->attach(
-                            $ingredients->random(rand(3, 6))->pluck('id')->toArray()
-                        );
+//                        $recipe->ingredients()->attach(
+//                            $ingredients->random(rand(3, 6))->pluck('id')->toArray()
+//                        );
+                        $ingredientIds = json_decode($recipe->ingredients, true);
+                        $recipe->ingredients()->sync($ingredientIds);
                     });
                 });
             });
