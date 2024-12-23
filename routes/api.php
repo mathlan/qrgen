@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\IngredientController;
+use App\Http\Controllers\QrController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\ScheduleController;
 use App\Models\User;
@@ -34,6 +35,9 @@ require base_path('routes/auth.php');
     Route::get('/schedules', [ScheduleController::class, 'index']);
     Route::get('/schedules/{schedule}', [ScheduleController::class, 'show']);
 
+    //QR
+    Route::get('/qr/{slug}', [QrController::class, 'show']);
+
 //* PRIVATE (JWT auth)
 Route::middleware('jwt.auth')->group(function () {
 
@@ -64,6 +68,9 @@ Route::middleware('jwt.auth')->group(function () {
     Route::put('/schedules/{schedule}', [ScheduleController::class, 'update']);
     Route::patch('/schedules/{schedule}', [ScheduleController::class, 'update']);
     Route::delete('/schedules/{schedule}', [ScheduleController::class, 'destroy']);
+
+    //QR
+    Route::get('/qr/{restaurant}/generate', [QrController::class, 'generateQr'])->middleware('auth:api');
 
     // TEST
     Route::get('/test', function () {

@@ -40,7 +40,7 @@ class RestaurantController extends Controller
             'photo' => 'nullable|string',
         ]);
 
-        // Associer le restaurant à l'utilisateur connecté
+        // Le slug sera généré automatiquement par le modèle
         $restaurant = $user->restaurants()->create($validatedData);
 
         return response()->json($restaurant, 201);
@@ -62,7 +62,6 @@ class RestaurantController extends Controller
     {
         $user = JWTAuth::parseToken()->authenticate();
 
-        // Vérifier si l'utilisateur est le propriétaire ou un admin
         if ($user->role !== 'admin' && $restaurant->user_id !== $user->id) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
@@ -73,6 +72,7 @@ class RestaurantController extends Controller
             'photo' => 'nullable|string',
         ]);
 
+        // Le slug sera mis à jour automatiquement si le nom change
         $restaurant->update($validatedData);
 
         return response()->json($restaurant);
